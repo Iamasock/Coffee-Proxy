@@ -270,6 +270,10 @@
             document.getElementById('password-wrapper').style.display = '';
         }
     });
+    function isUrl(val = '') {
+        if (/^http(s?):\/\//.test(val) || val.includes('.') && val.substr(0, 1) !== ' ') return true;
+        return false;
+    }
     window.addEventListener('load', function () {
         loadSessions();
         /*
@@ -295,7 +299,9 @@
             var id = document.getElementById('session-id').value;
             var httpproxy = document.getElementById('session-httpproxy').value;
             var enableShuffling = document.getElementById('session-shuffling').checked;
-            var url = document.getElementById('session-url').value || 'https://www.google.com/';
+            let url = document.getElementById('session-url').value;
+            if (!isUrl(url)) url = 'https://www.google.com/search?q=' + url;
+            else if (!(url.startsWith('https://') || url.startsWith('http://'))) url = 'http://' + url;
             if (!id) return setError('must generate a session id first');
             api.sessionexists(id, function (value) {
                 if (!value) return setError('session does not exist. try deleting or generating a new session');
@@ -314,6 +320,8 @@
         }
         document.getElementById('session-go').onclick = go;
         document.getElementById('session-url').onkeydown = function (event) {
+            // check if the session-url includes https:// or http:// with regex
+
             if (event.key === 'Enter') go();
         };
     });
