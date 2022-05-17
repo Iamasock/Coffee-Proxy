@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html data-theme="coffee">
+    <head>
+        <link rel="icon" type="image/png" href="./favicon.png" />
+        <script src="./script.js"></script>
+        <link rel="stylesheet" href="./css/main.css" />
+        <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+        <script src="https://kit.fontawesome.com/9513f4fc9a.js" crossorigin="anonymous"></script>
+        <title>Rammerhead Proxy</title>
+    </head>
+
+    <body>
+        <div class="flex justify-center items-center max-w-full h-screen flex-col">
+            <div class="flex absolute justify-end top-0 right-0 dropdown dropdown-end">
+                <button
+                    tabindex="0"
+                    class="text-gray-500 w-10 h-10 relative focus:outline-none bg-white m-1"
+                    id="my-drawer"
+                    @click="open = !open"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-6 h-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7"
+                        />
+                    </svg>
+                </button>
+                <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 mt-11">
+                    <li><a href="#settings">Settings</a></li>
+                    <li><a href="#credits">Credits</a></li>
+                    <li><a href="#session-table">Session Table</a></li>
+                </ul>
+            </div>
+            <div class="flex items-center flex-col">
+                <div class="hero min-h-screen">
+                    <div class="hero-content text-center base-100 rounded-md">
+                        <div class="max-w-md">
+                            <h1 class="text-5xl font-bold select-none">Coffee Proxy</h1>
+                            <p class="py-6 select-none">
+                                Coffee Proxy is a powerfull proxy powered by
+                                <a href="https://github.com/binary-person/rammerhead" target="_blank" class="underline"
+                                    >RammerHead</a
+                                >
+                            </p>
+                            <input
+                                type="text"
+                                placeholder="Type here"
+                                class="input input-bordered input-primary w-full max-w-xs mb-[1.2em]"
+                                id="session-url"
+                            />
+                            <button class="btn btn-primary" id="session-go">Search</button>
+
+                            <div class="form-control flex justify-center items-center">
+                                <label class="label"> </label>
+                                <label class="input-group">
+                                    <span class="">SessionId</span>
+                                    <input
+                                        type="text"
+                                        placeholder="Go to settings to make a session id"
+                                        class="input input-bordered w-full max-w-xs"
+                                        id="session-id"
+                                        disabled
+                                    />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TODO: Add modal to display current session ids eg settings page -->
+        </div>
+        <!-- Error handling -->
+        <div class="fixed bottom-0 right-0 mb-6 mr-6" id="error-container" style="display: none">
+            <div class="alert alert-error shadow-lg">
+                <div>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="stroke-current flex-shrink-0 h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                    </svg>
+                    <span id="error-text"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings And credits Modal -->
+        <div class="modal" id="settings">
+            <div class="modal-box">
+                <h1 class="font-bold text-2xl flex justify-center items-center mb-8">Settings</h1>
+                <div class="flex justify-center items-center flex-col">
+                    <div class="divider">General</div>
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text mr-5">Url Shuffling</span>
+                            <input
+                                type="checkbox"
+                                checked="checked"
+                                class="checkbox checkbox-primary"
+                                id="session-shuffling"
+                            />
+                        </label>
+                    </div>
+                    <div class="form-control">
+                        <label class="label"> </label>
+                        <label class="input-group">
+                            <span>HttpProxy</span>
+                            <input
+                                type="text"
+                                placeholder="http://username:password@proxyipaddress:proxyport"
+                                class="input input-bordered w-96"
+                                id="session-httpproxy"
+                            />
+                        </label>
+                    </div>
+                    <div class="divider">Sessions</div>
+                    <button class="btn btn-primary mb-6" id="session-create-btn">Create Session Id</button>
+                </div>
+                <div class="modal-action">
+                    <a href="#" class="btn">Close</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="credits">
+            <div class="modal-box">
+                <h2 class="font-bold text-lg">Credits</h2>
+                <div class="flex flex-col justify-center items-center">
+                    <p class="py-4">HTML, CSS, JS - illusions#3875 <br /></p>
+                </div>
+                <div class="modal-action">
+                    <a href="#" class="btn">Thanks!</a>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="session-table">
+            <div class="modal-box max-w-full">
+                <div class="flex justify-center">
+                    <h2 class="font-bold text-lg">Session-Table</h2>
+                    <div class="modal-action">
+                        <a href="#" class="btn btn-outline absolute right-2 top-2 w-10 h-4"
+                            ><i class="fa-solid fa-x"></i
+                        ></a>
+                    </div>
+                </div>
+
+                <!-- Table Stuff -->
+                <div class="mt-4">
+                    <div class="overflow-x-auto">
+                        <table class="table w-full">
+                            <!-- head -->
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Session ID</th>
+                                    <th>Created on</th>
+                                </tr>
+                            </thead>
+                            <!-- Rammerhead should take care of the rest -->
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <!---->
+            </div>
+        </div>
+    </body>
+</html>
