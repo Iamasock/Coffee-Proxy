@@ -328,7 +328,7 @@
                                         iframe.style.width = '100%';
                                         iframe.style.height = '100%';
                                         iframe.style.margin = '0';
-                                        iframe.src = "http://" + window.location.href.split('/')[2] + "/" + id + "/" + url;
+                                        iframe.src = "https://" + window.location.href.split('/')[2] + "/" + id + "/" + url;
                                         win.document.body.appendChild(iframe)
                                     }
                                 }
@@ -354,7 +354,7 @@
                                         iframe.style.width = '100%';
                                         iframe.style.height = '100%';
                                         iframe.style.margin = '0';
-                                        iframe.src = "http://" + window.location.href.split('/')[2] + '/' + id + '/' + shuffler.shuffle(url);
+                                        iframe.src = "https://" + window.location.href.split('/')[2] + '/' + id + '/' + shuffler.shuffle(url);
                                         win.document.body.appendChild(iframe)
                                     }
                                 }
