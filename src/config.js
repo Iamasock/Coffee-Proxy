@@ -20,7 +20,7 @@ module.exports = {
     // example of non-hard-coding the hostname header
 
     getServerInfo(req) {
-        return { hostname: new URL('http://' + req.headers.host).hostname, port: 443, crossDomainPort: 443, protocol: 'http:' }
+        return { hostname: new URL('http://' + req.headers.host).hostname, port: 443, crossDomainPort: 443, protocol: 'https:' }
     },
 
     // enforce a password for creating new sessions. set to null to disable
