@@ -1,17 +1,13 @@
 const path = require('path');
 const fs = require('fs');
-const os = require('os');
 
 module.exports = {
     //// HOSTING CONFIGURATION ////
 
-    bindingAddress: '0.0.0.0',
-    port: 8080,
-    crossDomainPort: 8081,
+    bindingAddress: '127.0.0.1',
+    port: process.env.PORT || 8080,
+    crossDomainPort: process.env.CD_PORT || 8081,
     publicDir: path.join(__dirname, '../public'), // set to null to disable
-
-    // if workers is null or 1, multithreading is disabled
-    workers: os.cpus().length,
 
     // ssl object is either null or { key: fs.readFileSync('path/to/key'), cert: fs.readFileSync('path/to/cert') }
     // for more info, see https://nodejs.org/api/https.html#https_https_createserver_options_requestlistener
@@ -20,11 +16,12 @@ module.exports = {
     // this function's return object will determine how the client url rewriting will work.
     // set them differently from bindingAddress and port if rammerhead is being served
     // from a reverse proxy.
-    getServerInfo: () => ({ hostname: 'localhost', port: 8080, crossDomainPort: 8081, protocol: 'http:' }),
+    //getServerInfo: () => ({ hostname: 'localhost', port: 8235, crossDomainPort: 8084, protocol: 'http:' }),
     // example of non-hard-coding the hostname header
-    // getServerInfo: (req) => {
-    //     return { hostname: new URL('http://' + req.headers.host).hostname, port: 443, crossDomainPort: 8443, protocol: 'https: };
-    // },
+
+    getServerInfo(req) {
+        return { hostname: new URL('http://' + req.headers.host).hostname, port: 8080, crossDomainPort: 8081, protocol: 'http:' }
+    },
 
     // enforce a password for creating new sessions. set to null to disable
     password: undefined,
@@ -34,10 +31,6 @@ module.exports = {
 
     // restrict sessions to be only used per IP
     restrictSessionToIP: false,
-
-    // use disk for caching js rewrites. set to null to use memory instead (not recommended for HDD disks)
-    diskJsCachePath: path.join(__dirname, '../cache-js'),
-    jsCacheSize: 5 * 1024 * 1024 * 1024, // recommended: 50mb for memory, 5gb for disk
 
     //// REWRITE HEADER CONFIGURATION ////
 
@@ -71,13 +64,25 @@ module.exports = {
     //// LOGGING CONFIGURATION ////
 
     // valid values: 'disabled', 'debug', 'traffic', 'info', 'warn', 'error'
-    logLevel: process.env.DEVELOPMENT ? 'debug' : 'info',
+    logLevel: "traffic",
+    /*
+    To Simply go into more detail,
+    disabled: No logging,
+    Debug: just kina goes more into detail on our reqests and responses,
+    Traffic: Logs url reqests and responses,
+    Info: only logs needed info ig ,
+    Warn: logs warnings,
+    Error: logs errors,
+    */
     generatePrefix: (level) => `[${new Date().toISOString()}] [${level.toUpperCase()}] `,
 
     // logger depends on this value
-    getIP: (req) => req.socket.remoteAddress
+    //getIP: (req) => req.socket.remoteAddress,
     // use the example below if rammerhead is sitting behind a reverse proxy like nginx
-    // getIP: req => (req.headers['x-forwarded-for'] || req.connection.remoteAddress || '').split(',')[0].trim()
+    getIP: req => (req.headers['x-forwarded-for'] || req.connection.remoteAddress || '').split(',')[0].trim(),
+
+    //console log the ip
+    //getIP: req => console.log(req.headers['x-forwarded-for'] || req.connection.remoteAddress || '')
 };
 
 if (fs.existsSync(path.join(__dirname, '../config.js'))) Object.assign(module.exports, require('../config'));

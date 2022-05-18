@@ -144,7 +144,8 @@ class RammerheadSessionFileCache extends RammerheadSessionAbstractStore {
     addSerializedSession(id, serializedSession) {
         this.logger.debug(`(FileCache.addSerializedSession) adding serialized session id ${id} to store`);
         const session = RammerheadSession.DeserializeSession(id, serializedSession);
-        fs.writeFileSync(this._getSessionFilePath(id), session.serializeSession());
+        session.updateLastUsed();
+        this.cachedSessions.set(id, session);
         this.logger.debug(`(FileCache.addSerializedSession) added ${id} to cache`);
     }
     close() {

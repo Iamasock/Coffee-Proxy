@@ -1,17 +1,15 @@
 node_modules/
-.vscode
+
 # don't commit generated builds or env files
 src/client/*.min.*
 src/client/hammerhead.js
 .env
 
-# don't commit session and cache data
+# don't commit session data
 sessions/*
-cache-js/*
 
 # but commit the empty folders
 !sessions/.gitkeep
-!cache-js/.gitkeep
 
 # ignore any custom configurations
 /config.js

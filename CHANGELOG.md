@@ -1,21 +1,3 @@
-## v1.2.2
-
-- add disk cache option for processed JS files. fixes huge server memory usage and enables workers to share the same cache
-- update `testcafe-hammerhead` to `v24.5.18`. fixes huge server slowdowns as brotli compression level is now adjusted to a much more reasonable value
-
-## v1.2.11
-
-- fix huge spikes of memory usage by replacing localStorage system with a custom one
-- more fixes for iframing
-
-## v1.2.01
-
-- avoid using unstable API `fs.cpSync` in build.js
-
-## v1.2.0
-
-- added multithreading support
-
 ## v1.1.34
 
 - convert hooks to stackable rewrite system
@@ -59,11 +41,11 @@
 
 ## v1.1.0
 
-- add url encoding
 - handle ECONNRESET manually
 - bring back MemoryStore class for module exports
 - add server option to disable localStorage syncing
 - fix `RammerheadSessionFileCache` not saving cache to disk correctly
+- add url encoding
 
 ## v1.0.8
 

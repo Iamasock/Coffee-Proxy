@@ -232,7 +232,7 @@
     }
     function loadSettings(session) {
         document.getElementById('session-id').value = session.id;
-        //document.getElementById('session-httpproxy').value = session.httpproxy || '';
+        document.getElementById('session-httpproxy').value = session.httpproxy || '';
         document.getElementById('session-shuffling').checked = typeof session.enableShuffling === 'boolean' ? session.enableShuffling : true;
     }
     function loadSessions() {
@@ -277,6 +277,8 @@
     window.addEventListener('load', function () {
         loadSessions();
         /*
+        Advanced options are not needed but i will leave this here if i need it later
+
                 var showingAdvancedOptions = false;
                 document.getElementById('session-advanced-toggle').onclick = function () {
                     // eslint-disable-next-line no-cond-assign
@@ -294,6 +296,11 @@
                 document.getElementById('session-httpproxy').value = '';
             });
         };
+
+
+
+
+
         function go() {
             setError();
             var id = document.getElementById('session-id').value;
@@ -309,10 +316,53 @@
                     editSession(id, httpproxy, enableShuffling);
                     api.shuffleDict(id, function (shuffleDict) {
                         if (!shuffleDict) {
-                            window.location.href = '/' + id + '/' + url;
+                            if (document.getElementById("Ab-Cloak").checked) {
+                                console.log("Ab-Cloak is checked");
+                                var win; {
+                                    if (win) { win.focus(); } else {
+                                        win = window.open();
+                                        win.document.body.style.margin = '0';
+                                        win.document.body.style.height = '100vh';
+                                        var iframe = win.document.createElement('iframe');
+                                        iframe.style.border = 'none';
+                                        iframe.style.width = '100%';
+                                        iframe.style.height = '100%';
+                                        iframe.style.margin = '0';
+                                        iframe.src = "http://" + window.location.href.split('/')[2] + "/" + id + "/" + url;
+                                        win.document.body.appendChild(iframe)
+                                    }
+                                }
+                            } else {
+
+                                window.location.href = '/' + id + '/' + url;
+                            }
+
+
+
                         } else {
-                            var shuffler = new StrShuffler(shuffleDict);
-                            window.location.href = '/' + id + '/' + shuffler.shuffle(url);
+                            if (document.getElementById("session-shuffling").checked) {
+                                console.log("session-shuffling is checked");
+                                var shuffler = new StrShuffler(shuffleDict);
+
+                                win; {
+                                    if (win) { win.focus(); } else {
+                                        win = window.open();
+                                        win.document.body.style.margin = '0';
+                                        win.document.body.style.height = '100vh';
+                                        iframe = win.document.createElement('iframe');
+                                        iframe.style.border = 'none';
+                                        iframe.style.width = '100%';
+                                        iframe.style.height = '100%';
+                                        iframe.style.margin = '0';
+                                        iframe.src = "http://" + window.location.href.split('/')[2] + '/' + id + '/' + shuffler.shuffle(url);
+                                        win.document.body.appendChild(iframe)
+                                    }
+                                }
+                            } else {
+                                console.log("Ab claok is not checked with in session-shuffling");
+                                window.location.href = '/' + id + '/' + shuffler.shuffle(url);
+
+                            }
                         }
                     });
                 });
@@ -320,7 +370,6 @@
         }
         document.getElementById('session-go').onclick = go;
         document.getElementById('session-url').onkeydown = function (event) {
-            // check if the session-url includes https:// or http:// with regex
 
             if (event.key === 'Enter') go();
         };

@@ -15,12 +15,6 @@ require('../util/fixCorsHeader');
 require('../util/fixWebsocket');
 require('../util/addMoreErrorGuards');
 require('../util/addUrlShuffling');
-require('../util/patchAsyncResourceProcessor');
-let addJSDiskCache = function (path, size) {
-    require('../util/addJSDiskCache')(path, size);
-    // modification only works once
-    addJSDiskCache = () => {};
-};
 
 /**
  * taken directly from
@@ -59,14 +53,11 @@ class RammerheadProxy extends Proxy {
      * @param {number} options.port - port for proxy to listen to
      * @param {number|null} options.crossDomainPort - crossDomain port to simulate cross origin requests. set to null
      * to disable using this. highly not recommended to disable this because it breaks sites that check for the origin header
-     * @param {boolean} options.dontListen - avoid calling http.listen() if you need to use sticky-session to load balance
      * @param {http.ServerOptions} options.ssl - set to null to disable ssl
      * @param {(req: http.IncomingMessage) => RammerheadServerInfo} options.getServerInfo - force hammerhead to rewrite using specified
      * server info (server info includes hostname, port, and protocol). Useful for a reverse proxy setup like nginx where you
      * need to rewrite the hostname/port/protocol
      * @param {boolean} options.disableLocalStorageSync - disables localStorage syncing (default: false)
-     * @param {string} options.diskJsCachePath - set to null to disable disk cache and use memory instead (disabled by default)
-     * @param {number} options.jsCacheSize - in bytes. default: 50mb
      */
     constructor({
         loggerGetIP = (req) => req.socket.remoteAddress,
@@ -74,7 +65,6 @@ class RammerheadProxy extends Proxy {
         bindingAddress = '127.0.0.1',
         port = 8080,
         crossDomainPort = 8081,
-        dontListen = false,
         ssl = null,
         getServerInfo = (req) => {
             const { hostname, port } = new URL('http://' + req.headers.host);
@@ -84,9 +74,7 @@ class RammerheadProxy extends Proxy {
                 protocol: req.socket.encrypted ? 'https:' : 'http:'
             };
         },
-        disableLocalStorageSync = false,
-        diskJsCachePath = null,
-        jsCacheSize = 50 * 1024 * 1024
+        disableLocalStorageSync = false
     } = {}) {
         if (!crossDomainPort) {
             const httpOrHttps = ssl ? https : http;
@@ -99,7 +87,7 @@ class RammerheadProxy extends Proxy {
             // a downside to using only one proxy server is that crossdomain requests
             // will not be simulated correctly
             proxyHttpOrHttps.createServer = function (...args) {
-                const emptyFunc = () => {};
+                const emptyFunc = () => { };
                 if (onlyOneHttpServer) {
                     // createServer for server1 already called. now we return a mock http server for server2
                     return { on: emptyFunc, listen: emptyFunc, close: emptyFunc };
@@ -112,7 +100,6 @@ class RammerheadProxy extends Proxy {
             // hammerhead server.listen(anything)
             const originalListen = http.Server.prototype.listen;
             http.Server.prototype.listen = function (_proxyPort) {
-                if (dontListen) return;
                 originalListen.call(this, port, bindingAddress);
             };
 
@@ -132,7 +119,6 @@ class RammerheadProxy extends Proxy {
             // we still need to make sure the proxy binds to the correct address though
             const originalListen = http.Server.prototype.listen;
             http.Server.prototype.listen = function (portArg) {
-                if (dontListen) return;
                 originalListen.call(this, portArg, bindingAddress);
             };
             super('doesntmatter', port, crossDomainPort, {
@@ -164,8 +150,6 @@ class RammerheadProxy extends Proxy {
 
         this.loggerGetIP = loggerGetIP;
         this.logger = logger;
-
-        addJSDiskCache(diskJsCachePath, jsCacheSize);
     }
 
     // add WS routing
