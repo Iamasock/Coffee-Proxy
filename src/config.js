@@ -4,7 +4,7 @@ const fs = require('fs');
 module.exports = {
     //// HOSTING CONFIGURATION ////
 
-    bindingAddress: '127.0.0.1',
+    bindingAddress: '0.0.0.0',
     port: process.env.PORT || 8080,
     crossDomainPort: process.env.CD_PORT || 8081,
     publicDir: path.join(__dirname, '../public'), // set to null to disable
@@ -20,7 +20,7 @@ module.exports = {
     // example of non-hard-coding the hostname header
 
     getServerInfo(req) {
-        return { hostname: new URL('http://' + req.headers.host).hostname, port: 8080, crossDomainPort: 8081, protocol: 'http:' }
+        return { hostname: new URL('http://' + req.headers.host).hostname, port: 443, crossDomainPort: 443, protocol: 'http:' }
     },
 
     // enforce a password for creating new sessions. set to null to disable
