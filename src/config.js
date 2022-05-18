@@ -64,7 +64,7 @@ module.exports = {
     //// LOGGING CONFIGURATION ////
 
     // valid values: 'disabled', 'debug', 'traffic', 'info', 'warn', 'error'
-    logLevel: "traffic",
+    logLevel: "info",
     /*
     To Simply go into more detail,
     disabled: No logging,
