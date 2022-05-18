@@ -340,8 +340,8 @@
 
 
                         } else {
-                            if (document.getElementById("session-shuffling").checked) {
-                                console.log("session-shuffling is checked");
+                            if (document.getElementById("Ab-Cloak").checked) {
+                                console.log("Ab-Cloak is checked & session-shuffling is checked");
                                 var shuffler = new StrShuffler(shuffleDict);
 
                                 win; {
