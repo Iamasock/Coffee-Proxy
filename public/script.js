@@ -342,7 +342,6 @@
                         } else {
                             if (document.getElementById("Ab-Cloak").checked) {
                                 console.log("Ab-Cloak is checked & session-shuffling is checked");
-                                var shuffler = new StrShuffler(shuffleDict);
 
                                 win; {
                                     if (win) { win.focus(); } else {
@@ -354,13 +353,13 @@
                                         iframe.style.width = '100%';
                                         iframe.style.height = '100%';
                                         iframe.style.margin = '0';
-                                        iframe.src = "https://" + window.location.href.split('/')[2] + '/' + id + '/' + shuffler.shuffle(url);
+                                        iframe.src = "https://" + window.location.href.split('/')[2] + '/' + id + '/' + new StrShuffler(shuffleDict).shuffle(url);
                                         win.document.body.appendChild(iframe)
                                     }
                                 }
                             } else {
-                                console.log("Ab claok is not checked with in session-shuffling");
-                                window.location.href = '/' + id + '/' + shuffler.shuffle(url);
+                                console.log("Ab claok is not checked with session-shuffling");
+                                window.location.href = '/' + id + '/' + new StrShuffler(shuffleDict).shuffle(url);
 
                             }
                         }
